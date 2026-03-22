@@ -100,6 +100,11 @@
     - `GET /api/admin/demo-logins`
     - `POST /api/admin/demo/reset`
     - `POST /api/admin/demo/reset-reseed`
+- Added full stack conversion outputs (parallel codebase strategy):
+  - New **Node.js + Express backend** in `/app/backend-node` (MongoDB + equivalent APIs)
+  - New **Vanilla frontend (HTML/CSS/JS)** in `/app/frontend-vanilla`
+  - All major flows migrated: booking, worker signup, user auth/profile/notifications, admin dashboard, subscriptions, analytics, demo utilities
+  - Added Node demo seeding module and CLI seed script under backend-node
 
 ## Prioritized Backlog
 ### P0 (Next Critical)

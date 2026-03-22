@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - User Auth</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="notifications" data-testid="nav-notifications-link" href="./account-notifications.html">Notifications</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="user-auth-page">
+      <p class="label" data-testid="user-auth-eyebrow">User Access</p>
+      <h1 data-testid="user-auth-title">Sign in to manage your profile and bookings.</h1>
+
+      <section class="card stack" data-testid="user-auth-card">
+        <div class="row">
+          <button class="btn btn-primary" id="authLoginTab" data-testid="user-auth-login-tab">Login</button>
+          <button class="btn btn-outline" id="authRegisterTab" data-testid="user-auth-register-tab">Register</button>
+        </div>
+
+        <div id="loginForm" class="stack" data-testid="user-login-form">
+          <div class="field"><label for="loginEmail">Email</label><input class="input" id="loginEmail" type="email" data-testid="user-login-email-input" /></div>
+          <div class="field"><label for="loginPassword">Password</label><input class="input" id="loginPassword" type="password" data-testid="user-login-password-input" /></div>
+        </div>
+
+        <div id="registerForm" class="stack hidden" data-testid="user-register-form">
+          <div class="grid grid-2">
+            <div class="field"><label for="registerName">Full Name</label><input class="input" id="registerName" data-testid="user-register-name-input" /></div>
+            <div class="field"><label for="registerPhone">Phone</label><input class="input" id="registerPhone" data-testid="user-register-phone-input" /></div>
+            <div class="field"><label for="registerEmail">Email</label><input class="input" id="registerEmail" type="email" data-testid="user-register-email-input" /></div>
+            <div class="field"><label for="registerPassword">Password</label><input class="input" id="registerPassword" type="password" data-testid="user-register-password-input" /></div>
+          </div>
+          <div class="field"><label for="registerAddress">Address</label><input class="input" id="registerAddress" data-testid="user-register-address-input" /></div>
+        </div>
+
+        <button class="btn btn-primary" id="authSubmitBtn" data-testid="user-auth-submit-button">Login</button>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/account-auth.js"></script>
+  </body>
+</html>

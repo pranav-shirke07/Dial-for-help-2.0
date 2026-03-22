@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Worker Signup</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="worker-signup-page">
+      <p class="label" data-testid="worker-page-eyebrow">Worker Application</p>
+      <h1 data-testid="worker-page-title">Join Dial For Help as a trusted local professional.</h1>
+
+      <section class="card stack" data-testid="worker-subscription-card">
+        <p data-testid="worker-subscription-pricing-text">Mandatory worker subscription: ₹199/year before signup.</p>
+        <p data-testid="worker-subscription-status-text">Subscription active: <span id="workerSubActive">No</span></p>
+        <p data-testid="worker-subscription-expiry-text">Valid till: <span id="workerSubExpiry">-</span></p>
+        <div class="row">
+          <button class="btn btn-primary" id="workerPayBtn" data-testid="worker-subscription-pay-button">Pay ₹199/year</button>
+          <button class="btn btn-outline" id="workerCheckSubBtn" data-testid="worker-subscription-check-button">Check Active Plan</button>
+        </div>
+      </section>
+
+      <section class="card stack" data-testid="worker-signup-form-card">
+        <div class="grid grid-2">
+          <div class="field"><label for="workerName">Full Name</label><input class="input" id="workerName" data-testid="worker-name-input" /></div>
+          <div class="field"><label for="workerPhone">Phone</label><input class="input" id="workerPhone" data-testid="worker-phone-input" /></div>
+          <div class="field"><label for="workerEmail">Email</label><input class="input" id="workerEmail" type="email" data-testid="worker-email-input" /></div>
+          <div class="field"><label for="workerCity">City</label><input class="input" id="workerCity" data-testid="worker-city-input" /></div>
+          <div class="field"><label for="workerSkill">Skill</label><select class="select" id="workerSkill" data-testid="worker-skill-select"></select></div>
+          <div class="field"><label for="workerAvailability">Availability</label><select class="select" id="workerAvailability" data-testid="worker-availability-select"><option>Full-time</option><option>Part-time</option><option>Weekends</option></select></div>
+          <div class="field"><label for="workerExperience">Years Experience</label><input class="input" id="workerExperience" type="number" min="0" data-testid="worker-experience-input" /></div>
+        </div>
+        <div class="field">
+          <label for="workerAbout">About</label>
+          <textarea class="textarea" id="workerAbout" data-testid="worker-about-input"></textarea>
+        </div>
+        <button class="btn btn-primary" id="workerSubmitBtn" data-testid="worker-submit-button">Submit Application</button>
+      </section>
+    </main>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/services-data.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/worker-signup.js"></script>
+  </body>
+</html>

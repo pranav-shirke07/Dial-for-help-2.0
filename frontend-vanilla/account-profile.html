@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Profile</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="notifications" data-testid="nav-notifications-link" href="./account-notifications.html">Notifications</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="user-profile-page">
+      <div class="row" style="justify-content: space-between">
+        <div>
+          <p class="label" data-testid="user-profile-eyebrow">My Profile</p>
+          <h1 data-testid="user-profile-title">Manage account settings</h1>
+        </div>
+        <div class="row">
+          <a class="btn btn-outline" href="./account-notifications.html" data-testid="user-profile-notifications-link">Open Notifications Inbox</a>
+          <button class="btn btn-outline" id="profileLogoutBtn" data-testid="user-logout-button">Logout</button>
+        </div>
+      </div>
+
+      <section class="card stack" data-testid="user-profile-form-card">
+        <div class="grid grid-2">
+          <div class="field"><label for="profileName">Full Name</label><input class="input" id="profileName" data-testid="user-profile-name-input" /></div>
+          <div class="field"><label for="profileEmail">Email</label><input class="input" id="profileEmail" data-testid="user-profile-email-input" disabled /></div>
+          <div class="field"><label for="profilePhone">Phone</label><input class="input" id="profilePhone" data-testid="user-profile-phone-input" /></div>
+          <div class="field"><label for="profileAddress">Address</label><input class="input" id="profileAddress" data-testid="user-profile-address-input" /></div>
+        </div>
+        <div class="row">
+          <label data-testid="user-profile-notify-email-label"><input type="checkbox" id="profileNotifyEmail" data-testid="user-profile-notify-email-switch" /> Email notifications</label>
+          <label data-testid="user-profile-notify-sms-label"><input type="checkbox" id="profileNotifySms" data-testid="user-profile-notify-sms-switch" /> SMS notifications</label>
+        </div>
+        <button class="btn btn-primary" id="profileSaveBtn" data-testid="user-profile-save-button">Save Profile</button>
+      </section>
+
+      <section class="card stack" data-testid="user-bookings-card">
+        <h2 data-testid="user-booking-history-title">My Booking History</h2>
+        <div id="profileBookingsList" class="stack" data-testid="user-bookings-list"></div>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/account-profile.js"></script>
+  </body>
+</html>

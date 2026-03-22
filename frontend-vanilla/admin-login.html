@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Admin Login</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <main class="page container stack" data-testid="admin-login-page">
+      <p class="label" data-testid="admin-login-eyebrow">Admin Access</p>
+      <h1 data-testid="admin-login-title">Manage bookings, workers and subscriptions</h1>
+
+      <section class="card stack" data-testid="admin-default-credentials-card">
+        <p data-testid="admin-default-credentials-label">Default login for first use:</p>
+        <p data-testid="admin-default-email" class="mono">Email: admin@dialforhelp.com</p>
+        <p data-testid="admin-default-password" class="mono">Password: Admin@123</p>
+      </section>
+
+      <section class="card stack" data-testid="admin-login-form-card">
+        <div class="field"><label for="adminEmail">Admin Email</label><input class="input" id="adminEmail" value="admin@dialforhelp.com" data-testid="admin-email-input" /></div>
+        <div class="field"><label for="adminPassword">Password</label><input class="input" id="adminPassword" type="password" value="Admin@123" data-testid="admin-password-input" /></div>
+        <button class="btn btn-primary" id="adminLoginBtn" data-testid="admin-login-submit-button">Open Dashboard</button>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/admin-login.js"></script>
+  </body>
+</html>

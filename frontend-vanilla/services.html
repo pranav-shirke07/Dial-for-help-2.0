@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - All Services</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="all-services-page">
+      <p class="label" data-testid="all-services-eyebrow">All Services</p>
+      <h1 data-testid="all-services-title">Browse and search every available service.</h1>
+      <div class="grid grid-2">
+        <input class="input" id="servicesSearch" data-testid="services-search-input" placeholder="Search by name or need" />
+        <select class="select" id="servicesCategory" data-testid="services-category-filter"></select>
+      </div>
+      <div class="grid grid-3" id="servicesGrid" data-testid="all-services-grid"></div>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/services-data.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/services-page.js"></script>
+  </body>
+</html>

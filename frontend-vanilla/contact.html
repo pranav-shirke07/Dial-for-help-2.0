@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Contact</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="contact-page">
+      <p class="label" data-testid="contact-eyebrow">Support Team</p>
+      <h1 data-testid="contact-title">Need help with a booking?</h1>
+      <p data-testid="contact-support-text">Tell us your concern and our team will get back quickly.</p>
+
+      <section class="card stack" data-testid="contact-form-card">
+        <div class="field"><label for="contactName">Name</label><input class="input" id="contactName" data-testid="contact-name-input" /></div>
+        <div class="field"><label for="contactEmail">Email</label><input class="input" id="contactEmail" type="email" data-testid="contact-email-input" /></div>
+        <div class="field"><label for="contactPhone">Phone</label><input class="input" id="contactPhone" data-testid="contact-phone-input" /></div>
+        <div class="field"><label for="contactMessage">Message</label><textarea class="textarea" id="contactMessage" data-testid="contact-message-input"></textarea></div>
+        <button class="btn btn-primary" id="contactSubmitBtn" data-testid="contact-submit-button">Send Message</button>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/contact.js"></script>
+  </body>
+</html>

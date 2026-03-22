@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Home</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="notifications" data-testid="nav-notifications-link" href="./account-notifications.html">Notifications</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="home-page">
+      <section class="grid grid-2">
+        <article class="stack">
+          <p class="label" data-testid="home-eyebrow">Emergency Home Support</p>
+          <h1 class="hero-title" data-testid="home-hero-title">A trusted worker at your door when life gets messy.</h1>
+          <p data-testid="home-hero-subtitle">
+            Book professional services, track updates, and manage subscriptions in one smooth flow.
+          </p>
+          <div class="row">
+            <a href="./book.html" class="btn btn-primary" data-testid="home-book-now-button">Book Help Now</a>
+            <a href="./services.html" class="btn btn-outline" data-testid="home-all-services-button">View All Services</a>
+            <a href="./worker-signup.html" class="btn btn-outline" data-testid="home-worker-signup-button">Join as Worker</a>
+          </div>
+        </article>
+        <article class="card stack" data-testid="home-service-search-card">
+          <p class="label">Quick Service Search</p>
+          <input class="input" id="homeServiceSearch" data-testid="home-service-search-input" placeholder="Search AC Repair, Plumbing..." />
+          <div id="homeServiceTags" class="row" data-testid="home-service-search-results"></div>
+        </article>
+      </section>
+
+      <section class="card stack" data-testid="home-top-services-card">
+        <h2 data-testid="home-top-services-title">Popular Services</h2>
+        <div class="grid grid-3" id="homeTopServices" data-testid="home-top-services-grid"></div>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/services-data.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/home.js"></script>
+  </body>
+</html>

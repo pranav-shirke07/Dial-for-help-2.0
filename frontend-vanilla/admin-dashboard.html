@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Admin Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <main class="page container stack" data-testid="admin-dashboard-page">
+      <div class="row" style="justify-content: space-between">
+        <div>
+          <p class="label" data-testid="admin-dashboard-eyebrow">Admin Dashboard</p>
+          <h1 data-testid="admin-dashboard-title">Dial For Help Operations</h1>
+        </div>
+        <div class="row">
+          <button class="btn btn-outline" id="adminResetDemoBtn" data-testid="admin-reset-demo-button">Reset Demo</button>
+          <button class="btn btn-primary" id="adminResetReseedBtn" data-testid="admin-reset-reseed-demo-button">Reset + Reseed</button>
+          <button class="btn btn-outline" id="adminLogoutBtn" data-testid="admin-logout-button">Logout</button>
+        </div>
+      </div>
+
+      <section class="grid grid-3" id="adminStatsGrid" data-testid="admin-stats-grid"></section>
+
+      <section class="grid grid-2">
+        <article class="card stack" data-testid="admin-analytics-summary-card">
+          <p class="label">Advanced Analytics</p>
+          <p data-testid="analytics-assignment-completion-rate">Assignment Completion Rate: <span id="analyticsCompletion"></span></p>
+          <p data-testid="analytics-active-subscriptions">Active Subscriptions: <span id="analyticsActiveSubs"></span></p>
+          <p data-testid="analytics-total-revenue">Total Subscription Revenue: ₹<span id="analyticsRevenue"></span></p>
+        </article>
+        <article class="card stack" data-testid="admin-monthly-analytics-card">
+          <p class="label">Monthly Trend</p>
+          <div id="analyticsMonthlyList" class="stack" data-testid="analytics-monthly-list"></div>
+        </article>
+      </section>
+
+      <section class="card stack" data-testid="admin-booking-filters-card">
+        <div class="grid grid-3">
+          <input class="input" id="adminSearchInput" data-testid="admin-booking-search-input" placeholder="Search booking ID, name, phone" />
+          <select class="select" id="adminStatusFilter" data-testid="admin-booking-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="assigned">Assigned</option><option value="completed">Completed</option></select>
+          <select class="select" id="adminServiceFilter" data-testid="admin-booking-service-filter"></select>
+        </div>
+      </section>
+
+      <section class="card stack" data-testid="admin-tabs-card">
+        <div class="row" data-testid="admin-tabs-row">
+          <button class="btn btn-primary" data-tab="bookings" data-testid="tab-bookings">Bookings</button>
+          <button class="btn btn-outline" data-tab="subscriptions" data-testid="tab-subscriptions">Subscriptions</button>
+          <button class="btn btn-outline" data-tab="demo-logins" data-testid="tab-demo-logins">Demo Logins</button>
+          <button class="btn btn-outline" data-tab="workers" data-testid="tab-workers">Workers</button>
+          <button class="btn btn-outline" data-tab="contacts" data-testid="tab-contacts">Contacts</button>
+        </div>
+
+        <div id="tab-bookings" class="tab-pane" data-testid="tab-pane-bookings">
+          <div class="table-wrap"><table id="bookingsTable" data-testid="bookings-table"></table></div>
+        </div>
+        <div id="tab-subscriptions" class="tab-pane hidden" data-testid="tab-pane-subscriptions">
+          <div class="row"><button class="btn btn-primary" id="dispatchRenewalsBtn" data-testid="dispatch-renewal-reminders-button">Send Renewal Reminders</button></div>
+          <div class="table-wrap"><table id="subscriptionsTable" data-testid="subscriptions-table"></table></div>
+        </div>
+        <div id="tab-demo-logins" class="tab-pane hidden" data-testid="tab-pane-demo-logins">
+          <div class="table-wrap"><table id="demoLoginsTable" data-testid="demo-logins-table"></table></div>
+        </div>
+        <div id="tab-workers" class="tab-pane hidden" data-testid="tab-pane-workers">
+          <div class="table-wrap"><table id="workersTable" data-testid="workers-table"></table></div>
+        </div>
+        <div id="tab-contacts" class="tab-pane hidden" data-testid="tab-pane-contacts">
+          <div class="table-wrap"><table id="contactsTable" data-testid="contacts-table"></table></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/services-data.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/admin-dashboard.js"></script>
+  </body>
+</html>

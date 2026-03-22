@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Book Service</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="booking-page">
+      <p class="label" data-testid="booking-page-eyebrow">Book a Service</p>
+      <h1 data-testid="booking-page-title">Tell us what you need, we’ll handle the rest.</h1>
+
+      <section class="card stack">
+        <p data-testid="booking-step-indicator">Step <span id="bookingStepLabel">1</span> of 3</p>
+
+        <div id="bookingStep1" class="stack" data-testid="booking-step-1">
+          <div class="field">
+            <label for="bookingFullName">Full Name</label>
+            <input class="input" id="bookingFullName" data-testid="booking-full-name-input" />
+          </div>
+          <div class="field">
+            <label for="bookingPhone">Phone</label>
+            <input class="input" id="bookingPhone" data-testid="booking-phone-input" />
+          </div>
+          <div class="field">
+            <label for="bookingEmail">Email</label>
+            <input class="input" id="bookingEmail" type="email" data-testid="booking-email-input" />
+          </div>
+          <div class="card" data-testid="booking-user-subscription-status-card">
+            <p data-testid="booking-free-remaining-text">Free services remaining: <span id="bookingFreeRemaining">-</span></p>
+            <p data-testid="booking-bookings-used-text">Bookings used: <span id="bookingUsedCount">-</span></p>
+            <p data-testid="booking-subscription-active-text">Subscription active: <span id="bookingSubActive">-</span></p>
+          </div>
+        </div>
+
+        <div id="bookingStep2" class="stack hidden" data-testid="booking-step-2">
+          <div class="field">
+            <label for="bookingServiceType">Service Type</label>
+            <select class="select" id="bookingServiceType" data-testid="booking-service-select"></select>
+          </div>
+          <div class="field">
+            <label for="bookingAddress">Address</label>
+            <input class="input" id="bookingAddress" data-testid="booking-address-input" />
+          </div>
+          <div class="field">
+            <label for="bookingDate">Preferred Date</label>
+            <input class="input" id="bookingDate" type="date" data-testid="booking-date-input" />
+          </div>
+        </div>
+
+        <div id="bookingStep3" class="stack hidden" data-testid="booking-step-3">
+          <div class="field">
+            <label for="bookingNotes">Additional Notes</label>
+            <textarea class="textarea" id="bookingNotes" data-testid="booking-notes-input"></textarea>
+          </div>
+          <div class="card" data-testid="booking-review-card">
+            <p data-testid="booking-review-name">Name: <span id="reviewName"></span></p>
+            <p data-testid="booking-review-service">Service: <span id="reviewService"></span></p>
+            <p data-testid="booking-review-date">Date: <span id="reviewDate"></span></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-outline" id="bookingBackBtn" data-testid="booking-back-button" disabled>Back</button>
+          <button class="btn btn-primary" id="bookingNextBtn" data-testid="booking-next-button">Continue</button>
+          <button class="btn btn-primary hidden" id="bookingSubmitBtn" data-testid="booking-submit-button">Confirm Booking</button>
+        </div>
+      </section>
+
+      <section class="card hidden" id="bookingSubscriptionCard" data-testid="booking-subscription-required-card">
+        <p data-testid="booking-subscription-required-text" id="bookingSubscriptionText"></p>
+        <button class="btn btn-primary" id="bookingSubscriptionPayBtn" data-testid="booking-subscription-pay-button">
+          Pay ₹99/year and Continue
+        </button>
+      </section>
+
+      <section class="card hidden" id="bookingSuccessCard" data-testid="booking-success-card">
+        <p data-testid="booking-confirmation-message">Booking submitted successfully.</p>
+        <p class="mono" data-testid="booking-confirmation-id">ID: <span id="bookingSuccessId"></span></p>
+      </section>
+    </main>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/services-data.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/booking.js"></script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dial For Help - Track Booking</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="./index.html" class="brand" data-testid="brand-title">Dial For Help</a>
+        <nav class="nav-links" data-testid="main-navigation">
+          <a class="pill-link" data-nav-key="home" data-testid="nav-home-link" href="./index.html">Home</a>
+          <a class="pill-link" data-nav-key="services" data-testid="nav-services-link" href="./services.html">Services</a>
+          <a class="pill-link" data-nav-key="book" data-testid="nav-book-link" href="./book.html">Book Help</a>
+          <a class="pill-link" data-nav-key="track" data-testid="nav-track-link" href="./track-booking.html">Track Booking</a>
+          <a class="pill-link" data-nav-key="worker" data-testid="nav-worker-link" href="./worker-signup.html">Worker Signup</a>
+          <a class="pill-link" data-nav-key="contact" data-testid="nav-contact-link" href="./contact.html">Contact</a>
+          <a class="pill-link" data-nav-key="account" data-testid="nav-account-link" href="./account-auth.html">User Account</a>
+          <a class="pill-link" data-nav-key="admin" data-testid="nav-admin-link" href="./admin-login.html">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page container stack" data-testid="track-booking-page">
+      <p class="label" data-testid="track-booking-eyebrow">Track My Booking</p>
+      <h1 data-testid="track-booking-title">Check your service status instantly.</h1>
+
+      <section class="card stack" data-testid="track-booking-form-card">
+        <div class="field">
+          <label for="trackBookingId">Booking ID</label>
+          <input class="input" id="trackBookingId" data-testid="track-booking-id-input" />
+        </div>
+        <button class="btn btn-primary" id="trackBookingBtn" data-testid="track-booking-search-button">Track Booking</button>
+      </section>
+
+      <section class="card stack hidden" id="trackResultCard" data-testid="track-booking-result-card">
+        <p class="mono" data-testid="track-booking-result-id">ID: <span id="trackResultId"></span></p>
+        <p data-testid="track-booking-result-service">Service: <span id="trackResultService"></span></p>
+        <p data-testid="track-booking-result-customer">Customer: <span id="trackResultCustomer"></span></p>
+        <p data-testid="track-booking-result-date">Date: <span id="trackResultDate"></span></p>
+        <p data-testid="track-booking-result-charge">Plan: <span id="trackResultCharge"></span></p>
+        <p data-testid="track-booking-result-worker">Assigned Worker: <span id="trackResultWorker"></span></p>
+        <div data-testid="track-booking-result-status" id="trackStatusChip" class="status-chip status-pending">pending</div>
+      </section>
+    </main>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/api.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/track-booking.js"></script>
+  </body>
+</html>
