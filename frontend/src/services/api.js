@@ -30,6 +30,10 @@ export const publicApi = {
     const response = await client.post("/bookings", payload);
     return response.data;
   },
+  trackBooking: async (bookingId) => {
+    const response = await client.get(`/bookings/track/${bookingId}`);
+    return response.data;
+  },
   createWorkerSignup: async (payload) => {
     const response = await client.post("/workers/signup", payload);
     return response.data;
@@ -74,6 +78,14 @@ export const adminApi = {
   },
   getOverview: async () => {
     const response = await client.get("/admin/overview", withAdminHeaders());
+    return response.data;
+  },
+  getSubscriptions: async () => {
+    const response = await client.get("/admin/subscriptions", withAdminHeaders());
+    return response.data;
+  },
+  getWorkerSuggestions: async (bookingId) => {
+    const response = await client.get(`/admin/bookings/${bookingId}/suggest-workers`, withAdminHeaders());
     return response.data;
   },
   updateBookingStatus: async (bookingId, payload) => {

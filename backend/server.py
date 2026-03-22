@@ -203,6 +203,38 @@ class PaymentVerifyResponse(BaseModel):
     active_until: str
 
 
+class BookingTrackingResponse(BaseModel):
+    booking_id: str
+    customer_name: str
+    service_type: str
+    status: str
+    preferred_date: str
+    created_at: str
+    charge_type: str
+    assigned_worker_name: Optional[str] = None
+
+
+class WorkerSuggestion(BaseModel):
+    worker_id: str
+    full_name: str
+    skill: str
+    availability: str
+    score: int
+
+
+class AdminSubscriptionItem(BaseModel):
+    id: str
+    plan_type: str
+    subscriber_name: str
+    email: str
+    phone: str
+    status: str
+    started_at: str
+    expires_at: str
+    days_remaining: int
+    renewal_reminder_due: bool
+
+
 def _coerce_booking_doc(document: dict) -> dict:
     document.setdefault("identity_key", get_identity_key(document["phone"], document["email"]))
     document.setdefault("charge_type", "free")
@@ -410,6 +442,16 @@ def _subscription_is_active(subscription: Optional[dict]) -> bool:
         return datetime.fromisoformat(expires_at) > datetime.now(timezone.utc)
     except ValueError:
         return False
+
+
+def _days_remaining(iso_datetime: str) -> int:
+    try:
+        expiry = datetime.fromisoformat(iso_datetime)
+    except ValueError:
+        return 0
+
+    remaining = expiry - datetime.now(timezone.utc)
+    return max(0, remaining.days)
 
 
 async def _get_active_subscription(phone: str, email: str, plan_type: Literal["user", "worker"]) -> Optional[dict]:
@@ -673,6 +715,31 @@ async def create_booking(payload: BookingCreate):
     return booking
 
 
+@api_router.get("/bookings/track/{booking_id}", response_model=BookingTrackingResponse)
+async def track_booking(booking_id: str):
+    booking_doc = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if not booking_doc:
+        raise HTTPException(status_code=404, detail="Booking ID not found")
+
+    booking = BookingResponse(**_coerce_booking_doc(booking_doc))
+    assigned_worker_name = None
+    if booking.assigned_worker_id:
+        worker = await db.workers.find_one({"id": booking.assigned_worker_id}, {"_id": 0})
+        if worker:
+            assigned_worker_name = worker.get("full_name")
+
+    return BookingTrackingResponse(
+        booking_id=booking.id,
+        customer_name=booking.full_name,
+        service_type=booking.service_type,
+        status=booking.status,
+        preferred_date=booking.preferred_date,
+        created_at=booking.created_at,
+        charge_type=booking.charge_type,
+        assigned_worker_name=assigned_worker_name,
+    )
+
+
 @api_router.post("/workers/signup", response_model=WorkerResponse)
 async def worker_signup(payload: WorkerSignupCreate):
     active_worker_subscription = await _get_active_subscription(payload.phone, str(payload.email), "worker")
@@ -762,6 +829,69 @@ async def admin_overview(_: dict = Depends(_get_admin_session)):
         workers=worker_items,
         contacts=contact_items,
     )
+
+
+@api_router.get("/admin/subscriptions", response_model=List[AdminSubscriptionItem])
+async def admin_subscriptions(_: dict = Depends(_get_admin_session)):
+    subscriptions = await db.subscriptions.find({}, {"_id": 0}).sort("expires_at", 1).to_list(1000)
+    items: List[AdminSubscriptionItem] = []
+
+    for entry in subscriptions:
+        expires_at = entry.get("expires_at", now_iso())
+        days_remaining = _days_remaining(expires_at)
+        items.append(
+            AdminSubscriptionItem(
+                id=entry.get("id", str(uuid.uuid4())),
+                plan_type=entry.get("plan_type", "unknown"),
+                subscriber_name=entry.get("subscriber_name", "Unknown"),
+                email=entry.get("email", ""),
+                phone=entry.get("phone", ""),
+                status=entry.get("status", "inactive"),
+                started_at=entry.get("started_at", now_iso()),
+                expires_at=expires_at,
+                days_remaining=days_remaining,
+                renewal_reminder_due=days_remaining <= 7,
+            )
+        )
+
+    return items
+
+
+@api_router.get("/admin/bookings/{booking_id}/suggest-workers", response_model=List[WorkerSuggestion])
+async def suggest_workers_for_booking(
+    booking_id: str,
+    _: dict = Depends(_get_admin_session),
+):
+    booking_doc = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if not booking_doc:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    booking = BookingResponse(**_coerce_booking_doc(booking_doc))
+    workers = await db.workers.find({"is_active": True}, {"_id": 0}).to_list(500)
+
+    suggestions: List[WorkerSuggestion] = []
+    for worker_doc in workers:
+        worker = WorkerResponse(**_coerce_worker_doc(worker_doc))
+        score = 0
+        if worker.skill == booking.service_type:
+            score += 5
+        if worker.availability == "Full-time":
+            score += 2
+        if worker.years_experience >= 5:
+            score += 1
+
+        suggestions.append(
+            WorkerSuggestion(
+                worker_id=worker.id,
+                full_name=worker.full_name,
+                skill=worker.skill,
+                availability=worker.availability,
+                score=score,
+            )
+        )
+
+    suggestions.sort(key=lambda item: item.score, reverse=True)
+    return suggestions[:5]
 
 
 @api_router.patch("/admin/bookings/{booking_id}/status", response_model=BookingResponse)

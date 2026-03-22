@@ -4,6 +4,7 @@ import { toast } from "@/components/ui/sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,16 +19,35 @@ const statusTone = {
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
   const [overview, setOverview] = useState(null);
+  const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingMap, setSavingMap] = useState({});
+  const [suggestingMap, setSuggestingMap] = useState({});
   const [drafts, setDrafts] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [serviceFilter, setServiceFilter] = useState("all");
 
   const workers = overview?.workers || [];
+  const bookings = overview?.bookings || [];
 
   const workerLookup = useMemo(
     () => workers.reduce((acc, worker) => ({ ...acc, [worker.id]: worker.full_name }), {}),
     [workers],
   );
+
+  const filteredBookings = useMemo(() => {
+    return bookings.filter((booking) => {
+      const matchSearch =
+        booking.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.id.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchStatus = statusFilter === "all" || booking.status === statusFilter;
+      const matchService = serviceFilter === "all" || booking.service_type === serviceFilter;
+      return matchSearch && matchStatus && matchService;
+    });
+  }, [bookings, searchTerm, statusFilter, serviceFilter]);
 
   const loadOverview = async () => {
     if (!getAdminToken()) {
@@ -36,11 +56,15 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const data = await adminApi.getOverview();
-      setOverview(data);
+      const [overviewData, subscriptionData] = await Promise.all([
+        adminApi.getOverview(),
+        adminApi.getSubscriptions(),
+      ]);
+      setOverview(overviewData);
+      setSubscriptions(subscriptionData);
 
       const nextDrafts = {};
-      data.bookings.forEach((booking) => {
+      overviewData.bookings.forEach((booking) => {
         nextDrafts[booking.id] = {
           status: booking.status,
           assigned_worker_id: booking.assigned_worker_id || "none",
@@ -65,6 +89,27 @@ export default function AdminDashboardPage() {
       ...prev,
       [bookingId]: { ...prev[bookingId], [field]: value },
     }));
+  };
+
+  const applyWorkerSuggestion = async (bookingId) => {
+    setSuggestingMap((prev) => ({ ...prev, [bookingId]: true }));
+    try {
+      const suggestions = await adminApi.getWorkerSuggestions(bookingId);
+      if (!suggestions.length) {
+        toast.error("No workers available for suggestion.");
+        return;
+      }
+      const recommended = suggestions[0];
+      updateDraft(bookingId, "assigned_worker_id", recommended.worker_id);
+      if ((drafts[bookingId]?.status || "pending") === "pending") {
+        updateDraft(bookingId, "status", "assigned");
+      }
+      toast.success(`Suggested worker: ${recommended.full_name}`);
+    } catch {
+      toast.error("Could not fetch worker suggestions.");
+    } finally {
+      setSuggestingMap((prev) => ({ ...prev, [bookingId]: false }));
+    }
   };
 
   const saveBooking = async (bookingId) => {
@@ -138,9 +183,45 @@ export default function AdminDashboardPage() {
           ))}
         </div>
 
+        <Card className="rounded-2xl border-stone-200 bg-white">
+          <CardContent className="grid gap-3 p-4 md:grid-cols-3">
+            <Input
+              placeholder="Search by booking ID, name, phone, email"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              data-testid="admin-booking-search-input"
+            />
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger data-testid="admin-booking-status-filter">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="assigned">Assigned</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={serviceFilter} onValueChange={setServiceFilter}>
+              <SelectTrigger data-testid="admin-booking-service-filter">
+                <SelectValue placeholder="Filter by service" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Services</SelectItem>
+                {["Plumbing", "Electrical", "Cleaning", "General Handyman", "Other"].map((service) => (
+                  <SelectItem key={service} value={service}>
+                    {service}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="bookings" className="space-y-4" data-testid="admin-dashboard-tabs">
           <TabsList>
             <TabsTrigger value="bookings" data-testid="tab-bookings">Bookings</TabsTrigger>
+            <TabsTrigger value="subscriptions" data-testid="tab-subscriptions">Subscriptions</TabsTrigger>
             <TabsTrigger value="workers" data-testid="tab-workers">Workers</TabsTrigger>
             <TabsTrigger value="contacts" data-testid="tab-contacts">Contacts</TabsTrigger>
           </TabsList>
@@ -153,13 +234,14 @@ export default function AdminDashboardPage() {
                     <TableRow>
                       <TableHead>Customer</TableHead>
                       <TableHead>Service</TableHead>
+                      <TableHead>Plan</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Assign Worker</TableHead>
                       <TableHead>Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {overview.bookings.map((booking) => (
+                    {filteredBookings.map((booking) => (
                       <TableRow key={booking.id} data-testid={`booking-row-${booking.id}`}>
                         <TableCell>
                           <div>
@@ -170,6 +252,7 @@ export default function AdminDashboardPage() {
                           </div>
                         </TableCell>
                         <TableCell data-testid={`booking-service-${booking.id}`}>{booking.service_type}</TableCell>
+                        <TableCell data-testid={`booking-charge-type-${booking.id}`}>{booking.charge_type}</TableCell>
                         <TableCell>
                           <div className="space-y-2">
                             <Badge className={statusTone[drafts[booking.id]?.status || booking.status]} data-testid={`booking-status-badge-${booking.id}`}>
@@ -222,21 +305,82 @@ export default function AdminDashboardPage() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Button
-                            size="sm"
-                            onClick={() => saveBooking(booking.id)}
-                            disabled={Boolean(savingMap[booking.id])}
-                            data-testid={`booking-save-button-${booking.id}`}
-                          >
-                            {savingMap[booking.id] ? "Saving..." : "Save"}
-                          </Button>
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => applyWorkerSuggestion(booking.id)}
+                              disabled={Boolean(suggestingMap[booking.id])}
+                              data-testid={`booking-suggest-button-${booking.id}`}
+                            >
+                              {suggestingMap[booking.id] ? "Suggesting..." : "Suggest"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              onClick={() => saveBooking(booking.id)}
+                              disabled={Boolean(savingMap[booking.id])}
+                              data-testid={`booking-save-button-${booking.id}`}
+                            >
+                              {savingMap[booking.id] ? "Saving..." : "Save"}
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
-                    {overview.bookings.length === 0 && (
+                    {filteredBookings.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="py-8 text-center text-muted-foreground" data-testid="bookings-empty-message">
-                          No bookings yet.
+                        <TableCell colSpan={6} className="py-8 text-center text-muted-foreground" data-testid="bookings-empty-message">
+                          No bookings match current filters.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="subscriptions">
+            <Card className="rounded-2xl border-stone-200 bg-white">
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Subscriber</TableHead>
+                      <TableHead>Plan</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Expires</TableHead>
+                      <TableHead>Reminder</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {subscriptions.map((entry) => (
+                      <TableRow key={entry.id} data-testid={`subscription-row-${entry.id}`}>
+                        <TableCell>
+                          <p data-testid={`subscription-name-${entry.id}`}>{entry.subscriber_name}</p>
+                          <p className="text-xs text-muted-foreground" data-testid={`subscription-contact-${entry.id}`}>
+                            {entry.email} • {entry.phone}
+                          </p>
+                        </TableCell>
+                        <TableCell data-testid={`subscription-plan-${entry.id}`}>{entry.plan_type}</TableCell>
+                        <TableCell data-testid={`subscription-status-${entry.id}`}>{entry.status}</TableCell>
+                        <TableCell data-testid={`subscription-expiry-${entry.id}`}>
+                          {new Date(entry.expires_at).toLocaleDateString()} ({entry.days_remaining} days)
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={entry.renewal_reminder_due ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}
+                            data-testid={`subscription-reminder-${entry.id}`}
+                          >
+                            {entry.renewal_reminder_due ? "Reminder Due" : "Healthy"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {subscriptions.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={5} className="py-8 text-center text-muted-foreground" data-testid="subscriptions-empty-message">
+                          No subscriptions yet.
                         </TableCell>
                       </TableRow>
                     )}

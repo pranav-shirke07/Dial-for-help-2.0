@@ -7,6 +7,7 @@ import HomePage from "@/pages/HomePage";
 import BookingPage from "@/pages/BookingPage";
 import WorkerSignupPage from "@/pages/WorkerSignupPage";
 import ContactPage from "@/pages/ContactPage";
+import TrackBookingPage from "@/pages/TrackBookingPage";
 import AdminLoginPage from "@/pages/AdminLoginPage";
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path="book" element={<BookingPage />} />
+            <Route path="track-booking" element={<TrackBookingPage />} />
             <Route path="worker-signup" element={<WorkerSignupPage />} />
             <Route path="contact" element={<ContactPage />} />
           </Route>
