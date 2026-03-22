@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timedelta, timezone
 import logging
 import os
@@ -231,7 +232,7 @@ def _send_email_message(recipient: str, subject: str, body_text: str) -> Notific
         )
 
 
-def _notify_booking_event(booking: BookingResponse, event_title: str) -> List[NotificationLog]:
+async def _notify_booking_event(booking: BookingResponse, event_title: str) -> List[NotificationLog]:
     logs: List[NotificationLog] = []
     admin_email = os.environ.get("ADMIN_NOTIFY_EMAIL")
     admin_phone = os.environ.get("ADMIN_NOTIFY_PHONE")
@@ -257,11 +258,16 @@ def _notify_booking_event(booking: BookingResponse, event_title: str) -> List[No
         f"Booking {booking.id[:8]} | {booking.service_type} | Status: {booking.status}."
     )
 
-    for email in email_targets:
-        logs.append(_send_email_message(email, email_subject, email_body))
+    tasks = [
+        asyncio.to_thread(_send_email_message, email, email_subject, email_body)
+        for email in email_targets
+    ]
+    tasks.extend(
+        [asyncio.to_thread(_send_sms_message, phone, sms_body) for phone in sms_targets]
+    )
 
-    for phone in sms_targets:
-        logs.append(_send_sms_message(phone, sms_body))
+    if tasks:
+        logs = await asyncio.gather(*tasks)
 
     return logs
 
@@ -327,7 +333,7 @@ async def create_booking(payload: BookingCreate):
     booking_doc = booking.model_dump()
     await db.bookings.insert_one(dict(booking_doc))
 
-    notification_log = _notify_booking_event(booking, "Booking received")
+    notification_log = await _notify_booking_event(booking, "Booking received")
     if notification_log:
         updated_at = now_iso()
         await db.bookings.update_one(
@@ -445,7 +451,7 @@ async def update_booking_status(
     booking = BookingResponse(**updated_doc)
 
     event_name = f"Status changed to {payload.status}"
-    notification_log = _notify_booking_event(booking, event_name)
+    notification_log = await _notify_booking_event(booking, event_name)
     if notification_log:
         combined_log = booking.notification_log + notification_log
         updated_at = now_iso()
