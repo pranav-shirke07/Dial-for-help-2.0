@@ -82,6 +82,10 @@
   - Added user notification APIs and DB persistence for booking/status/assignment/subscription events
   - Added admin action to dispatch renewal reminders for due subscriptions
   - Tightened Fast2SMS success parsing so HTTP 200 with business-level failure is logged as failed (accurate delivery status)
+- Added realistic India-focused **large demo seed dataset** in append mode (kept existing records):
+  - Added 50 users, 60 workers, 200 bookings, 95 subscriptions, 60 contacts, 315 user notifications
+  - Seeded records are distributed across services/statuses so admin and customer flows appear live immediately
+  - Seeded user login password: `User@123`
 
 ## Prioritized Backlog
 ### P0 (Next Critical)
